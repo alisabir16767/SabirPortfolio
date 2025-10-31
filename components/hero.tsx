@@ -202,7 +202,7 @@ export default function Hero() {
               >
                 <span className="flex items-center gap-1">
                   <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                  2+ Years Experience
+                  2+ Years Hands-On Experience
                 </span>
               </motion.div>
 
