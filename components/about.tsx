@@ -42,7 +42,7 @@ export default function About() {
   const stats = [
     { number: "1100+", label: "DSA Problems Solved" },
     { number: "4 Star", label: "GFG Rating" },
-    { number: "2+", label: "Years Experience" },
+    { number: "2+", label: "Years Hands-on Practical Experience" },
     { number: "15+", label: "Projects Completed" }
   ]
 

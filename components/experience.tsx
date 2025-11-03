@@ -9,7 +9,7 @@ export default function Experience() {
     {
       company: "Moment of Inertia",
       role: "Full Stack Developer (Remote)",
-      period: "2024 - Present",
+      period: "2025 - Present",
       location: "Remote",
       type: "Current",
       icon: <Rocket className="h-5 w-5" />,
@@ -25,7 +25,7 @@ export default function Experience() {
     {
       company: "SmallBus",
       role: "Backend Developer Intern",
-      period: "2023 - 2024",
+      period: "sept 2025 - Dec 2025",
       location: "Remote",
       type: "Internship",
       icon: <Code className="h-5 w-5" />,
@@ -41,7 +41,7 @@ export default function Experience() {
     {
       company: "Prenagati Technology",
       role: "MERN Stack Developer Intern",
-      period: "2022 - 2023",
+      period: "May 2024 - July 2024",
       location: "Remote",
       type: "Internship",
       icon: <Target className="h-5 w-5" />,
