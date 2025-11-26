@@ -339,7 +339,7 @@ export default function Hero() {
                 <div className="w-full h-full bg-gray-800 rounded-full flex items-center justify-center overflow-hidden border-4 border-white backdrop-blur-sm">
                   <div className="text-center text-white">
                     <div className="text-6xl mb-2">👨‍💻</div>
-                    <p className="text-sm font-medium">Your Photo Here</p>
+                    <p className="text-sm font-medium">My Photo Here</p>
                   </div>
                 </div>
 
