@@ -241,7 +241,7 @@ export default function Hero() {
               transition={{ delay: 0.9, duration: 0.8 }}
             >
               <motion.a 
-                href="https://github.com" 
+                href="https://github.com/alisabir16767" 
                 className="hover:text-yellow-300 transition-colors transform hover:scale-110 backdrop-blur-sm bg-white/10 p-2 rounded-full"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -249,7 +249,7 @@ export default function Hero() {
                 <Github size={28} />
               </motion.a>
               <motion.a 
-                href="https://linkedin.com" 
+                href="https://www.linkedin.com/in/sabirali123/" 
                 className="hover:text-yellow-300 transition-colors transform hover:scale-110 backdrop-blur-sm bg-white/10 p-2 rounded-full"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
