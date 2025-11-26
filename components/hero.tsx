@@ -8,7 +8,7 @@ import { useEffect, useState, useRef } from 'react'
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false)
-  const canvasRef = useRef(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     setIsVisible(true)
@@ -20,11 +20,18 @@ export default function Hero() {
     if (!canvas) return
 
     const gl = canvas.getContext('webgl')
-    if (!gl) return
+    if (!gl) {
+      console.warn('WebGL not supported, falling back to 2D background')
+      return
+    }
 
     // Set canvas size
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    const setCanvasSize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    setCanvasSize()
+    window.addEventListener('resize', setCanvasSize)
 
     // Vertex shader
     const vsSource = `
@@ -35,6 +42,7 @@ export default function Hero() {
       
       void main() {
         gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+        gl_PointSize = 2.0;
         vDepth = aVertexPosition.z;
       }
     `
@@ -45,10 +53,10 @@ export default function Hero() {
       varying float vDepth;
       
       void main() {
-        vec3 color1 = vec3(0.1, 0.0, 0.3); // Deep purple
-        vec3 color2 = vec3(0.4, 0.2, 0.6); // Medium purple
-        vec3 color3 = vec3(0.8, 0.6, 1.0); // Light purple
-        vec3 color4 = vec3(1.0, 0.8, 0.2); // Yellow
+        vec3 color1 = vec3(0.1, 0.0, 0.3);
+        vec3 color2 = vec3(0.4, 0.2, 0.6);
+        vec3 color3 = vec3(0.8, 0.6, 1.0);
+        vec3 color4 = vec3(1.0, 0.8, 0.2);
         
         float factor = (vDepth + 1.0) / 2.0;
         vec3 color;
@@ -67,14 +75,17 @@ export default function Hero() {
 
     // Compile shaders
     const vertexShader = gl.createShader(gl.VERTEX_SHADER)
+    if (!vertexShader) return
     gl.shaderSource(vertexShader, vsSource)
     gl.compileShader(vertexShader)
 
     const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
+    if (!fragmentShader) return
     gl.shaderSource(fragmentShader, fsSource)
     gl.compileShader(fragmentShader)
 
     const shaderProgram = gl.createProgram()
+    if (!shaderProgram) return
     gl.attachShader(shaderProgram, vertexShader)
     gl.attachShader(shaderProgram, fragmentShader)
     gl.linkProgram(shaderProgram)
@@ -82,7 +93,7 @@ export default function Hero() {
 
     // Create 3D particles
     const particles = []
-    const particleCount = 2000
+    const particleCount = 1500
 
     for (let i = 0; i < particleCount; i++) {
       particles.push(
@@ -102,10 +113,8 @@ export default function Hero() {
 
     // Set up perspective
     const projectionMatrix = new Float32Array(16)
-    const modelViewMatrix = new Float32Array(16)
-    
     const fieldOfView = 45 * Math.PI / 180
-    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight
+    const aspect = canvas.clientWidth / canvas.clientHeight
     const zNear = 0.1
     const zFar = 100.0
 
@@ -124,30 +133,22 @@ export default function Hero() {
     let time = 0
 
     const render = () => {
+      if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) return
+
       time += 0.01
       rotation += 0.002
-
-      // Resize canvas if window size changed
-      if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
-        canvas.width = canvas.clientWidth
-        canvas.height = canvas.clientHeight
-        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
-        
-        // Update projection matrix for new aspect ratio
-        projectionMatrix[0] = f / (gl.canvas.clientWidth / gl.canvas.clientHeight)
-      }
 
       gl.clearColor(0.05, 0.03, 0.1, 1.0)
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
       gl.enable(gl.DEPTH_TEST)
 
-      // Model-view matrix with rotation and slight movement
-      const mvMatrix = [
+      // Model-view matrix with rotation and movement
+      const mvMatrix = new Float32Array([
         Math.cos(rotation), 0, Math.sin(rotation), 0,
         0, 1, 0, 0,
         -Math.sin(rotation), 0, Math.cos(rotation), 0,
         Math.sin(time * 0.5) * 0.2, Math.cos(time * 0.3) * 0.1, -5, 1
-      ]
+      ])
 
       gl.uniformMatrix4fv(projectionMatrixUniform, false, projectionMatrix)
       gl.uniformMatrix4fv(modelViewMatrixUniform, false, mvMatrix)
@@ -157,6 +158,11 @@ export default function Hero() {
     }
 
     render()
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('resize', setCanvasSize)
+    }
   }
 
   return (
